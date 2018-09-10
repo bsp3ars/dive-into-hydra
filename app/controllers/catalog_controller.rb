@@ -4,8 +4,10 @@ require 'blacklight/catalog'
 class CatalogController < ApplicationController
 
   include Hydra::Catalog
-  # This filter applies the hydra access controls
-  before_action :enforce_show_permissions, only: :show
+    # These before_filters apply the hydra access controls
+    #before_filter :enforce_show_permissions, :only=>:show
+    # This applies appropriate access controls to all solr queries
+    Hydra::SearchBuilder.default_processor_chain -= [:add_access_controls_to_solr_params]
 
   configure_blacklight do |config|
     ## Class for sending and receiving requests from a search index
@@ -19,6 +21,7 @@ class CatalogController < ApplicationController
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
+      qf: 'title_tesim author_tesim',
       qt: 'search',
       rows: 10
     }
