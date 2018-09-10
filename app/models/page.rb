@@ -1,5 +1,5 @@
 class Page < ActiveFedora::Base
-
+  has_subresource "pageContent"
   property :number, predicate: ::RDF::URI.new('http://opaquenamespace.org/hydra/pageNumber'), multiple: false do |index|
     index.as :stored_searchable
     index.type :integer
