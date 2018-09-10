@@ -40,8 +40,10 @@ class BooksController < ApplicationController
   # PATCH/PUT /books/1
   # PATCH/PUT /books/1.json
   def update
+    @book.attributes = book_params
+    @book.author = params[:book][:author].select { |a| a.present? }
     respond_to do |format|
-      if @book.update(book_params)
+      if @book.save
         format.html { redirect_to @book, notice: 'Book was successfully updated.' }
         format.json { render :show, status: :ok, location: @book }
       else
@@ -69,6 +71,6 @@ class BooksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def book_params
-      params.require(:book).permit(:title, :author)
+      params.require(:book).permit(:title, :author=>[])
     end
 end
